@@ -1,5 +1,5 @@
 '''
-Distributed Tensorflow 0.8.0 example of using data parallelism and share model parameters.
+Distributed Tensorflow 1.0.0 example of using data parallelism and share model parameters.
 Trains a simple sigmoid neural network on mnist for 20 epochs on three machines using one parameter server. 
 
 Change the hardcoded host urls below with your own hosts. 
@@ -117,11 +117,11 @@ elif FLAGS.job_name == "worker":
 			accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 		# create a summary for our cost and accuracy
-		tf.scalar_summary("cost", cross_entropy)
-		tf.scalar_summary("accuracy", accuracy)
+		tf.summary.scalar("cost", cross_entropy)
+		tf.summary.scalar("accuracy", accuracy)
 
 		# merge all summaries into a single "operation" which we can execute in a session 
-		summary_op = tf.merge_all_summaries()
+		summary_op = tf.summary.merge_all()
 		init_op = tf.initialize_all_variables()
 		print("Variables initialized ...")
 
@@ -139,7 +139,7 @@ elif FLAGS.job_name == "worker":
 			sess.run(init_token_op)
 		'''
 		# create log writer object (this will log on every machine)
-		writer = tf.train.SummaryWriter(logs_path, graph=tf.get_default_graph())
+		writer = tf.summary.FileWriter(logs_path, graph=tf.get_default_graph())
 				
 		# perform training cycles
 		start_time = time.time()
